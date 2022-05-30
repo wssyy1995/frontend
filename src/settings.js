@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'DaXiang',
+  title: '数数测试',
 
   /**
    * @type {boolean} true | false

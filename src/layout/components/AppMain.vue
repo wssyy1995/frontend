@@ -7,64 +7,15 @@
       </keep-alive>
       <!--</transition>-->
     </div>
-    <!--todo 先写死-->
-    <div v-if="showMobile" style="width: 350px;height: calc(100% - 84px);position: absolute;top: 84px;right: 10px;overflow: auto;">
-      <android-stf-controller v-if="screenType === 'stf'" />
-      <android-scrcpy-controller v-else-if="screenType === 'scrcpy'" />
-      <ios-controller v-else-if="screenType === 'ios'" />
-    </div>
-    <div v-if="showBrowser" style="width: 100px;height: calc(100% - 84px);position: absolute;top: 84px;right: 10px;overflow: auto;">
-      <browser-websocket-board />
-    </div>
   </section>
 </template>
 
 <script>
-import AndroidStfController from '@/pages/mobile/android/components/AndroidStfController'
-import AndroidScrcpyController from '@/pages/mobile/android/components/AndroidScrcpyController'
-import IosController from '@/pages/mobile/ios/components/IosController'
-import BrowserWebsocketBoard from '@/pages/browser/BrowserWebsocketBoard'
-
 export default {
   name: 'AppMain',
-  components: {
-    AndroidStfController,
-    AndroidScrcpyController,
-    IosController,
-    BrowserWebsocketBoard
-  },
   computed: {
     leftStyle() {
-      // todo 先写死
-      if (this.$store.state.mobile.show) {
-        return 'width: calc(100% - 360px)'
-      } else if (this.$store.state.browser.show) {
-        return 'width: calc(100% - 110px)'
-      } else {
-        return ''
-      }
-    },
-    showMobile() {
-      return this.$store.state.mobile.show
-    },
-    showBrowser() {
-      return this.$store.state.browser.show
-    },
-    screenType() {
-      const platform = this.$store.state.mobile.platform
-      const systemVersion = this.$store.state.mobile.systemVersion
-      if (platform === 1) {
-        if (parseInt(systemVersion) >= 5) {
-          // 版本5以上 scrcpy
-          return 'scrcpy'
-        } else {
-          return 'stf'
-        }
-      } else if (platform === 2) { // ios
-        return 'ios'
-      } else {
-        return 'unknow platform'
-      }
+      return 'width: calc(100% - 360px)'
     },
     routes() {
       return this.$store.getters.permission_routes
@@ -80,14 +31,6 @@ export default {
     }
   },
   created() {
-    // 移除与项目冲突的路由
-    const toBeRemovedRoutePaths = this.platform === 1 ? ['/browser'] : this.platform === 2 ? ['/browser', '/driver'] : ['/app', '/mobile', '/driver']
-    for (let i = 0; i < this.routes.length; i++) {
-      if (toBeRemovedRoutePaths.includes(this.routes[i].path)) {
-        this.routes.splice(i, 1)
-        i = i - 1
-      }
-    }
   }
 }
 </script>
