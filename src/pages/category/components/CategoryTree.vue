@@ -6,10 +6,9 @@
       highlight-current
       default-expand-all
       :expand-on-click-node="false"
-      @node-click="nodeClick"
       :render-content="renderContent"
-    >
-    </el-tree>
+      @node-click="nodeClick"
+    />
 
     <el-dialog :title="dialogTitle" :visible.sync="dialogFormVisible">
       <el-form :model="saveCategoryForm" label-width="100">
@@ -46,7 +45,7 @@ export default {
         id: undefined,
         name: '',
         type: this.type,
-        projectId: this.$store.state.project.id,
+        projectId: this.$store.getters.projectId,
         parentId: 0
       },
       isAddCategory: false
@@ -57,7 +56,7 @@ export default {
   },
   methods: {
     fetchCategoryTree() {
-      getCategoryTree(this.$store.state.project.id, this.type).then(response => {
+      getCategoryTree(this.$store.getters.projectId, this.type).then(response => {
         this.treeData[0].children = response.data
       })
     },
@@ -67,21 +66,21 @@ export default {
     renderContent(h, { node, data, store }) {
       if (!data.id) { // 全部
         return (
-          <span class="custom-tree-node">
+          <span class='custom-tree-node'>
             <span>{node.label}</span>
             <span>
-              <el-button class="el-icon-circle-plus" size="mini" type="text" on-click={ () => this.add(data) } />
+              <el-button class='el-icon-circle-plus' size='mini' type='text' on-click={ () => this.add(data) } />
             </span>
           </span>
         )
       }
       return (
-        <span class="custom-tree-node">
+        <span class='custom-tree-node'>
           <span>{node.label}</span>
           <span>
-            <el-button class="el-icon-circle-plus" size="mini" type="text" on-click={ () => this.add(data) } />
-            <el-button class="el-icon-edit" size="mini" type="text" on-click={ () => this.update(data) } />
-            <el-button class="el-icon-delete" size="mini" type="text" on-click={ () => this.remove(node, data) } />
+            <el-button class='el-icon-circle-plus' size='mini' type='text' on-click={ () => this.add(data) } />
+            <el-button class='el-icon-edit' size='mini' type='text' on-click={ () => this.update(data) } />
+            <el-button class='el-icon-delete' size='mini' type='text' on-click={ () => this.remove(node, data) } />
           </span>
         </span>
       )
@@ -108,7 +107,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteCategory(data.id, data.type, this.$store.state.project.id).then(resp => {
+        deleteCategory(data.id, data.type, this.$store.getters.projectId).then(resp => {
           this.$notify.success(resp.msg)
           this.fetchCategoryTree()
         })

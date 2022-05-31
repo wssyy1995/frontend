@@ -1,7 +1,7 @@
 <template>
   <el-form :data="globalVar" label-width="100px">
     <el-form-item label="分类">
-      <el-select v-model="globalVar.categoryId" @visible-change="categorySelectChange" clearable filterable placeholder="选择分类">
+      <el-select v-model="globalVar.categoryId" clearable filterable placeholder="选择分类" @visible-change="categorySelectChange">
         <el-option v-for="category in categories" :key="category.id" :label="category.name" :value="category.id" />
       </el-select>
     </el-form-item>
@@ -15,7 +15,7 @@
       <el-table :data="globalVar.environmentValues" border>
         <el-table-column align="center" label="环境" width="200">
           <template scope="{ row }">
-            <el-select v-model="row.environmentId" @visible-change="envSelectChange" placeholder="选择环境" style="width: 100%">
+            <el-select v-model="row.environmentId" placeholder="选择环境" style="width: 100%" @visible-change="envSelectChange">
               <el-option v-for="environment in environmentList" :key="environment.id" :value="environment.id" :label="environment.name" />
             </el-select>
           </template>
@@ -29,7 +29,7 @@
           <template scope="scope">
             <el-button-group>
               <el-button @click="addEnvironmentValue(scope.$index)">+</el-button>
-              <el-button @click="delEnvironmentValue(scope.$index)" :disabled="scope.$index === 0">-</el-button>
+              <el-button :disabled="scope.$index === 0" @click="delEnvironmentValue(scope.$index)">-</el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -51,11 +51,11 @@ import { getEnvironmentList } from '@/api/environment'
 import ImageInput from '@/components/ImageInput'
 
 export default {
-  props: {
-    isAdd: Boolean
-  },
   components: {
     ImageInput
+  },
+  props: {
+    isAdd: Boolean
   },
   data() {
     return {
@@ -71,7 +71,7 @@ export default {
         ],
         description: '',
         categoryId: undefined,
-        projectId: this.$store.state.project.id
+        projectId: this.$store.getters.projectId
       },
       environmentList: [],
       categories: []
@@ -120,7 +120,7 @@ export default {
       }
     },
     fetchEnvironmentList() {
-      getEnvironmentList({ projectId: this.$store.state.project.id }).then(response => {
+      getEnvironmentList({ projectId: this.$store.getters.projectId }).then(response => {
         this.environmentList = [
           {
             id: -1,

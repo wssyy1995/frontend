@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div>
-      <el-button @click="$router.push({ name: 'AddGlobalVar' })" style="margin-bottom: 10px">添加全局变量</el-button>
+      <el-button style="margin-bottom: 10px" @click="$router.push({ name: 'AddGlobalVar' })">添加全局变量</el-button>
     </div>
 
     <el-row>
@@ -16,9 +16,7 @@
             <template scope="{ row }">
               <el-table :data="row.environmentValues" border fit>
                 <el-table-column label="环境" align="center" width="120" show-overflow-tooltip>
-                  <template scope="{ row }">
-                    {{ environmentList.filter(env => env.id === row.environmentId)[0].name }}
-                  </template>
+                  <p>占位</p>
                 </el-table-column>
                 <el-table-column label="值" align="center" prop="value" show-overflow-tooltip />
               </el-table>
@@ -26,15 +24,10 @@
           </el-table-column>
           <el-table-column label="描述" align="center" prop="description" show-overflow-tooltip />
           <el-table-column label="创建时间" align="center" width="200" show-overflow-tooltip>
-            <template scope="{ row }">
-              {{ `${row.creatorNickName} ${row.createTime}` }}
-            </template>
+            <p>占位</p>
           </el-table-column>
           <el-table-column label="操作" width="120" align="center">
-            <template scope="{ row }">
-              <el-button type="primary" class="el-icon-edit" @click="updateGlobalVar(row)" />
-              <el-button type="danger" class="el-icon-delete" @click="deleteGlobalVar(row)" />
-            </template>
+            <p>占位</p>
           </el-table-column>
         </el-table>
         <pagination v-show="total>0" :total="total" :page.sync="queryForm.pageNum" :limit.sync="queryForm.pageSize" @pagination="fetchGlobalVarList" />
@@ -60,7 +53,7 @@ export default {
       globalVarList: [],
       total: 0,
       queryForm: {
-        projectId: this.$store.state.project.id,
+        projectId: 0,
         pageNum: 1,
         pageSize: 10,
         categoryId: undefined
@@ -70,7 +63,7 @@ export default {
   },
   computed: {
     projectId() {
-      return this.$store.state.project.id
+      return 0
     }
   },
   created() {
@@ -100,7 +93,7 @@ export default {
       })
     },
     fetchEnvironmentList() {
-      getEnvironmentList({ projectId: this.$store.state.project.id }).then(response => {
+      getEnvironmentList({ projectId: this.$store.getters.projectId }).then(response => {
         this.environmentList = [{
           id: -1,
           name: '默认'

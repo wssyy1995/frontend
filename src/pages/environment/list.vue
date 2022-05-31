@@ -40,7 +40,7 @@ export default {
       environmentList: [],
       total: 0,
       queryForm: {
-        projectId: this.$store.state.project.id,
+        projectId: this.$store.getters.projectId,
         pageNum: 1,
         pageSize: 10
       }

@@ -8,21 +8,6 @@ export function addCategory(data) {
   })
 }
 
-export function deleteCategory(id, type, projectId) {
-  return request({
-    method: 'delete',
-    url: `/category/${id}/type/${type}/project/${projectId}`
-  })
-}
-
-export function updateCategory(data) {
-  return request({
-    method: 'post',
-    url: '/category/update',
-    data
-  })
-}
-
 export function getCategoryList(params) {
   return request({
     method: 'post',
@@ -31,13 +16,11 @@ export function getCategoryList(params) {
   })
 }
 
-
-export function getCategoryTree(projectId, type) {
+export function getCategoryTree(type) {
   return request({
     method: 'get',
     url: '/category/tree',
     params: {
-      projectId,
       type
     }
   })

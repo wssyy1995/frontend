@@ -23,6 +23,7 @@ export function updateEnvironment(data) {
   })
 }
 
+// 获取项目对应保存的环境
 export function getEnvironmentList(params) {
   return request({
     method: 'post',

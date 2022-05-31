@@ -24,7 +24,7 @@ export default {
         id: undefined,
         name: '',
         description: '',
-        projectId: this.$store.state.project.id
+        projectId: this.$store.getters.projectId
       }
     }
   },

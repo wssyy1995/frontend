@@ -53,12 +53,12 @@
           <span style="margin-left: 10px;font-size: 10px;color: #8c939d">所有测试用例执行后执行的操作</span>
         </el-form-item>
         <el-form-item label="测试集" :rules="[{required: true}]">
-          <el-select v-model="saveTestPlanForm.testSuites" @visible-change="testSuiteSelectChange" multiple filterable clearable :rules="[{required: true}]" style="width: 100%">
+          <el-select v-model="saveTestPlanForm.testSuites" multiple filterable clearable :rules="[{required: true}]" style="width: 100%" @visible-change="testSuiteSelectChange">
             <el-option
               v-for="testSuite in testSuites"
+              :key="testSuite.id"
               :label="testSuite.name"
               :value="testSuite.id"
-              :key="testSuite.id"
             />
           </el-select>
         </el-form-item>
@@ -72,8 +72,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="devices" :rules="[{required: true}]">
-          <el-select v-model="saveTestPlanForm.deviceIds" @visible-change="deviceSelectChange" clearable filterable multiple style="width: 100%">
-            <el-option v-for="device in onlineDevices" :label="device.id" :value="device.id" :key="device.id">
+          <el-select v-model="saveTestPlanForm.deviceIds" clearable filterable multiple style="width: 100%" @visible-change="deviceSelectChange">
+            <el-option v-for="device in onlineDevices" :key="device.id" :label="device.id" :value="device.id">
               <template v-if="platform === 3">
                 <span>{{ device.platform === 1 ? 'windows' : device.platform === 2 ? 'linux' : 'macos' }}</span>
                 <el-divider direction="vertical" />
@@ -100,7 +100,7 @@
           <el-input v-model="saveTestPlanForm.cronExpression" clearable />
         </el-form-item>
         <el-form-item label="录制视频" :rules="[{required: true}]">
-          <el-switch :disabled="platform === 3" v-model="saveTestPlanForm.enableRecordVideo" :active-value="1" :inactive-value="0" />
+          <el-switch v-model="saveTestPlanForm.enableRecordVideo" :disabled="platform === 3" :active-value="1" :inactive-value="0" />
         </el-form-item>
         <el-form-item label="失败重试次数" :rules="[{required: true}]">
           <el-input v-model="saveTestPlanForm.failRetryCount" clearable />
@@ -109,13 +109,13 @@
           <el-radio v-model="saveTestPlanForm.runMode" :label="1">
             兼容模式
             <el-popover placement="top" trigger="hover" content="[并发执行]所选device执行同一份用例">
-              <i class="el-icon-question" slot="reference" />
+              <i slot="reference" class="el-icon-question" />
             </el-popover>
           </el-radio>
           <el-radio v-model="saveTestPlanForm.runMode" :label="2">
             高效模式
             <el-popover placement="top" trigger="hover" content="[并发执行]用例平均分配给所选device执行">
-              <i class="el-icon-question" slot="reference" />
+              <i slot="reference" class="el-icon-question" />
             </el-popover>
           </el-radio>
         </el-form-item>
@@ -144,7 +144,7 @@ export default {
         id: undefined,
         name: '',
         description: '',
-        projectId: this.$store.state.project.id,
+        projectId: this.$store.getters.projectId,
         environmentId: -1,
         beforeClass: null,
         beforeMethod: null,
@@ -166,10 +166,21 @@ export default {
   },
   computed: {
     projectId() {
-      return this.$store.state.project.id
+      return this.$store.getters.projectId
     },
     platform() {
       return this.$store.state.project.platform
+    }
+  },
+  created() {
+    this.fetchOnlineDevices()
+    this.fetchActionCascader()
+    this.fetchTestSuiteList()
+    this.fetchEnvironmentList()
+    if (!this.isAdd) {
+      getTestPlanList({ id: this.$route.params.testPlanId }).then(response => {
+        this.saveTestPlanForm = response.data[0]
+      })
     }
   },
   methods: {
@@ -235,17 +246,6 @@ export default {
           this.onlineDevices = response.data
         })
       }
-    }
-  },
-  created() {
-    this.fetchOnlineDevices()
-    this.fetchActionCascader()
-    this.fetchTestSuiteList()
-    this.fetchEnvironmentList()
-    if (!this.isAdd) {
-      getTestPlanList({ id: this.$route.params.testPlanId }).then(response => {
-        this.saveTestPlanForm = response.data[0]
-      })
     }
   }
 }

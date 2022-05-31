@@ -1,7 +1,7 @@
 <template>
   <el-container style="height: 100%">
     <el-header height="50px">
-      <el-select v-model="selectedCategoryId" @visible-change="categorySelectChange" clearable filterable placeholder="选择分类">
+      <el-select v-model="selectedCategoryId" clearable filterable placeholder="选择分类" @visible-change="categorySelectChange">
         <el-option v-for="category in categories" :key="category.id" :label="category.name" :value="category.id" />
       </el-select>
       <el-button type="primary" @click="addGlobalVars">保 存</el-button>
@@ -32,7 +32,7 @@
             <el-table :data="row.environmentValues" border>
               <el-table-column align="center" label="环境" width="150">
                 <template scope="scope">
-                  <el-select v-model="scope.row.environmentId" @visible-change="envSelectChange" placeholder="选择环境" style="width: 100%">
+                  <el-select v-model="scope.row.environmentId" placeholder="选择环境" style="width: 100%" @visible-change="envSelectChange">
                     <el-option v-for="environment in environmentList" :key="environment.id" :value="environment.id" :label="environment.name" />
                   </el-select>
                 </template>
@@ -46,7 +46,7 @@
                 <template scope="scope">
                   <el-button-group>
                     <el-button @click="addEnvironmentValue(row, scope.$index)">+</el-button>
-                    <el-button @click="delEnvironmentValue(row, scope.$index)" :disabled="scope.$index === 0">-</el-button>
+                    <el-button :disabled="scope.$index === 0" @click="delEnvironmentValue(row, scope.$index)">-</el-button>
                   </el-button-group>
                 </template>
               </el-table-column>
@@ -62,7 +62,7 @@
           <template scope="scope">
             <el-button-group>
               <el-button @click="addGlobalVar(scope.$index)">+</el-button>
-              <el-button @click="delGlobalVar(scope.$index)" :disabled="scope.$index === 0">-</el-button>
+              <el-button :disabled="scope.$index === 0" @click="delGlobalVar(scope.$index)">-</el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -101,14 +101,14 @@ export default {
       categories: []
     }
   },
+  computed: {
+    projectId() {
+      return this.$store.getters.projectId
+    }
+  },
   created() {
     this.fetchEnvironmentList()
     this.fetchCategoryList()
-  },
-  computed: {
-    projectId() {
-      return this.$store.state.project.id
-    }
   },
   methods: {
     fetchCategoryList() {

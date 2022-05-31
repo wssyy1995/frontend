@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button @click="$router.push({ name: 'AddTestPlan' })" style="margin-bottom: 10px">添加测试计划</el-button>
+    <el-button style="margin-bottom: 10px" @click="$router.push({ name: 'AddTestPlan' })">添加测试计划</el-button>
     <el-table :data="testPlanList" border fit>
       <el-table-column label="环境" align="center" width="200">
         <template scope="{ row }">
@@ -48,10 +48,14 @@ export default {
       queryTestPlanListForm: {
         pageNum: 1,
         pageSize: 10,
-        projectId: this.$store.state.project.id // 这里不能用computed里的projectId，会拿到undefined
+        projectId: this.$store.getters.projectId // 这里不能用computed里的projectId，会拿到undefined
       },
       environmentList: []
     }
+  },
+  created() {
+    this.fetchEnvironmentList()
+    this.fetchTestPlanList()
   },
   methods: {
     fetchTestPlanList() {
@@ -82,7 +86,7 @@ export default {
       })
     },
     fetchEnvironmentList() {
-      getEnvironmentList({ projectId: this.$store.state.project.id }).then(response => {
+      getEnvironmentList({ projectId: this.$store.getters.projectId }).then(response => {
         this.environmentList = [{
           id: -1,
           name: '默认'
@@ -94,10 +98,6 @@ export default {
         this.fetchTestPlanList()
       })
     }
-  },
-  created() {
-    this.fetchEnvironmentList()
-    this.fetchTestPlanList()
   }
 }
 </script>

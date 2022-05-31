@@ -35,13 +35,7 @@
               </el-select>
             </template>
           </el-table-column>
-          <el-table-column label="操作" width="180" align="center">
-            <template scope="{ row }">
-              <el-button type="success" class="el-icon-document-copy" @click="copyAction(row)" />
-              <el-button type="primary" class="el-icon-edit" @click="updateAction(row.id)" />
-              <el-button type="danger" class="el-icon-delete" @click="deleteAction(row)" />
-            </template>
-          </el-table-column>
+          <el-table-column label="操作" width="180" align="center" />
         </el-table>
         <pagination v-show="total>0" :total="total" :page.sync="queryForm.pageNum" :limit.sync="queryForm.pageSize" @pagination="fetchActionList" />
       </el-col>
@@ -50,7 +44,7 @@
 </template>
 
 <script>
-import { getActionList, deleteAction, updateAction } from '@/api/action'
+import { getActionList } from '@/api/action'
 import Pagination from '@/components/Pagination'
 import CategoryTree from '@/pages/category/components/CategoryTree'
 import { stateList } from '@/utils/common'
@@ -68,20 +62,12 @@ export default {
         pageNum: 1,
         pageSize: 10,
         type: 3,
-        projectId: this.$store.state.project.id,
+        projectId: 0,
         name: '',
         state: undefined,
         categoryId: undefined
       },
       stateList: stateList
-    }
-  },
-  computed: {
-    projectId() {
-      return this.$store.state.project.id
-    },
-    platform() {
-      return this.$store.state.project.platform
     }
   },
   created() {
@@ -92,47 +78,10 @@ export default {
       this.queryForm.pageNum = 1
       this.fetchActionList()
     },
-    copyAction(action) {
-      const _action = JSON.parse(JSON.stringify(action))
-      delete _action.id
-      delete _action.createTime
-      delete _action.creatorUid
-      delete _action.creatorNickName
-      delete _action.updateTime
-      delete _action.updatorUid
-      delete _action.updatorNickName
-      this.$router.push({
-        name: 'AddTestcaseAction',
-        params: _action
-      })
-    },
     async fetchActionList() {
       const { data } = await getActionList(this.queryForm)
       this.actionList = data.data
       this.total = data.total
-    },
-    deleteAction(action) {
-      this.$confirm(`删除${action.name}`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        deleteAction(action.id).then(response => {
-          this.$notify.success(response.msg)
-          this.fetchActionList()
-        })
-      })
-    },
-    updateAction(id) {
-      this.$router.push({ name: 'UpdateTestcaseAction', params: { actionId: id }})
-    },
-    stateChange(row) {
-      updateAction(row).then(() => {
-        this.fetchActionList()
-      }).catch(() => {
-        // 修改失败，重刷，否则当前select选择的值是错误的
-        this.fetchActionList()
-      })
     },
     onCategoryClick(categoryId) {
       this.queryForm.categoryId = categoryId

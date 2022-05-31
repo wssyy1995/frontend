@@ -5,9 +5,7 @@
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
-      <template v-if="device!=='mobile'">
-        <search id="header-search" class="right-menu-item" />
-      </template>
+      <search id="header-search" class="right-menu-item" />
     </div>
   </div>
 </template>
@@ -26,28 +24,12 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'sidebar',
-      'name',
-      'avatar',
-      'device',
-      'projectId',
-      'userProjects',
-      'roles'
+      'sidebar'
     ])
   },
   methods: {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
-    },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    },
-    selectedUserProject(projectId) {
-      const selectedProject = this.userProjects.filter(project => project.id === projectId)[0]
-      this.$store.dispatch('project/setId', selectedProject.id)
-      this.$store.dispatch('project/setPlatform', selectedProject.platform)
-      location.reload()
     }
   }
 }

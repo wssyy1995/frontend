@@ -20,9 +20,6 @@ export default {
     routes() {
       return this.$store.getters.permission_routes
     },
-    platform() {
-      return this.$store.state.project.platform
-    },
     cachedViews() {
       return this.$store.state.tagsView.cachedViews
     },

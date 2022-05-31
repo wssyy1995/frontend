@@ -24,16 +24,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
-  },
-  {
-    path: '/auth-redirect',
-    component: () => import('@/views/login/auth-redirect'),
-    hidden: true
-  },
-  {
     path: '/404',
     component: () => import('@/views/error-page/404'),
     hidden: true
@@ -84,21 +74,8 @@ export const constantRoutes = [
     ]
   },
   {
-    path: 'log',
-    component: Layout,
-    children: [
-      {
-        path: '/:wsUrl',
-        component: () => import('@/pages/log/index'),
-        name: 'Log',
-        meta: { title: '日志', noCache: false },
-        hidden: true
-      }
-    ]
-  },
-  {
     path: '/auto',
-    meta: { title: '自动化', icon: 'auto', roles: ['admin'] },
+    meta: { title: '自动化', icon: 'auto' },
     component: Layout,
     children: [
       {
@@ -116,7 +93,7 @@ export const constantRoutes = [
       {
         path: '/testTask',
         component: Layout,
-        meta: { icon: 'testtask', roles: ['testTask'] },
+        meta: { icon: 'testtask' },
         children: [
           {
             path: 'list',
@@ -137,18 +114,18 @@ export const constantRoutes = [
   },
   {
     path: '/taTool',
-    meta: { title: 'TA工具', icon: 'tool', roles: ['admin'] },
+    meta: { title: 'TA工具', icon: 'tool' },
     component: Layout,
     children: [
       {
         path: 'docker',
-        component: () => import('@/pages/action/testcase/list'),
+        // component: () => import(),
         name: 'docker',
         meta: { title: 'docker', icon: 'icon_docker', noCache: true }
       },
       {
         path: 'datagenerate',
-        component: () => import('@/pages/action/testcase/list'),
+        // component: () => import(),
         name: 'dataGenerate',
         meta: { title: '造数工具', icon: 'data', noCache: true }
       }
@@ -157,12 +134,12 @@ export const constantRoutes = [
   {
     path: '/system',
     component: Layout,
-    meta: { title: '系统管理', icon: 'setting', roles: ['admin'] },
+    meta: { title: '系统管理', icon: 'setting' },
     children: [
       {
-        path: 'project/list',
-        component: () => import('@/pages/project/list'),
-        name: 'ProjectList',
+        path: 'manage',
+        // component: () => import('@/pages/action/testcase/list'),
+        name: '系统管理',
         meta: { title: '系统管理', icon: 'setting', noCache: true }
       }
     ]
